@@ -4,8 +4,8 @@
   "license": "",
   "repository": "",
   "scripts": {
-    "preinstall": "server/sam/build.sh",
-    "test": "tape server/test/test.js"
+    "preinstall": "sam/build.sh",
+    "test": "tape test/test.js"
   },
   "dependencies": {
     "async": "^2.0.0-rc.6",
