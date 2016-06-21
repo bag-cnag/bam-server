@@ -5,7 +5,7 @@ const path = require('path');
 var config = require("./config.json");
 
 module.exports = {
-    getReadsFromRegions: function (fileName, regions, callback) {
+    getReadsFromRegions: function (fileName, regions, histogram, histogramLogarithm, callback) {
         async.waterfall([
             function (cb) {
                 var files = shell.find(config.folders).filter(function (file) {
@@ -24,8 +24,14 @@ module.exports = {
             },
             function (filePath, cb) {
                 var tasks = [];
-                for (var i = 0; i < regions.length; i++) {
-                    tasks.push(getRegionTask(filePath, regions[i]));
+                if (histogram != true) {
+                    for (var i = 0; i < regions.length; i++) {
+                        tasks.push(getRegionTask(filePath, regions[i]));
+                    }
+                } else {
+                    for (var i = 0; i < regions.length; i++) {
+                        tasks.push(getHistogramRegionTask(filePath, regions[i], histogramLogarithm));
+                    }
                 }
                 async.parallel(tasks, function (err, results) {
                     cb(err, results);
@@ -35,14 +41,19 @@ module.exports = {
             if (err) {
                 callback(err);
             } else {
-                callback(null, {
-                    regionsCount: results.length,
-                    regions: regions,
-                    results: results
-                })
+                if (histogram != true) {
+                    callback(null, {
+                        regionsCount: results.length,
+                        regions: regions,
+                        results: results
+                    });
+                } else {
+                    callback(null, results);
+                }
             }
         });
     },
+
     getFiles: function (callback) {
         async.waterfall([
             function (cb) {
@@ -79,10 +90,34 @@ module.exports = {
     }
 }
 
-function getRegionTask(filePath, region) {
+function getHistogramRegionTask(filePath, region, histogramLogarithm) {
     return function (cb) {
-        getReadsFromRegion(filePath, region, function (err, out) {
-            cb(err, out);
+        var command = 'sam/samtools/bin/samtools view -c ' + filePath + ' ' + region;
+        exec(command, function (error, stdout, stderr) {
+            var out = stdout.trim();
+            var split1 = region.split(':');
+            var split2 = split1[1].split('-');
+            // console.log(stdout);
+            // console.log(stderr);
+            if (out == "") {
+                cb(error, {
+                    features_count: 0,
+                    start: parseInt(split2[0]),
+                    end: parseInt(split2[1]),
+                    chromosome: split1[0]
+                });
+            } else {
+                var count = parseInt(out);
+                if (histogramLogarithm == true) {
+                    count = (count < 2) ? count : Math.log10(count);
+                }
+                cb(error, {
+                    features_count: count,
+                    start: parseInt(split2[0]),
+                    end: parseInt(split2[1]),
+                    chromosome: split1[0]
+                });
+            }
         });
     }
 }
@@ -97,6 +132,14 @@ function getFirstReadTask(filePath) {
             } else {
                 cb(error, lineToJson(stdout.trim()));
             }
+        });
+    }
+}
+
+function getRegionTask(filePath, region) {
+    return function (cb) {
+        getReadsFromRegion(filePath, region, function (err, out) {
+            cb(err, out);
         });
     }
 }

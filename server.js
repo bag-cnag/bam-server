@@ -1,6 +1,6 @@
 // Internal require
 const cluster = require('cluster');
-const samtoolsView = require('./samtools-view.js');
+const samtoolsWrap = require('./samtools-wrap.js');
 var config = require("./config.json");
 
 if (cluster.isMaster) {
@@ -43,24 +43,26 @@ if (cluster.isMaster) {
     })); // support encoded bodies
     app.use(bodyParser.json()); // support json encoded bodies
 
-    app.get('/', function (req, res) {
-        // var fileName = "HG00096.chrom20.ILLUMINA.bwa.GBR.low_coverage.20120522.bam";
+    app.get(config.urlPathPrefix + '/', function (req, res) {
         var fileName = req.query.fileName;
+        var histogram = req.query.histogram === 'true';
+        var histogramLogarithm = req.query.histogramLogarithm === 'true';
         if (req.query.region != null) {
             var regions = req.query.region.split(',');
-            samtoolsView.getReadsFromRegions(fileName, regions, function (err, result) {
+            samtoolsWrap.getReadsFromRegions(fileName, regions, histogram, histogramLogarithm, function (err, result) {
                 if (err) {
                     res.status(500).send(err);
                 } else {
                     res.send(result);
                 }
             });
+
         } else {
             res.status(500).send();
         }
     });
-    app.get('/list', function (req, res) {
-        samtoolsView.getFiles(function (err, result) {
+    app.get(config.urlPathPrefix + '/list', function (req, res) {
+        samtoolsWrap.getFiles(function (err, result) {
             if (err) {
                 res.status(500).send(err);
             } else {
@@ -69,6 +71,10 @@ if (cluster.isMaster) {
         });
     });
 
-    app.listen(1111);
+    app.get(config.urlPathPrefix + '/test', function (req, res) {
+        res.send("I am alive!");
+    });
+
+    app.listen(config.port);
     console.log('Worker %d running!', cluster.worker.id);
 }
