@@ -16,14 +16,3 @@ test('test samtools works', function (t) {
         t.end();
     });
 });
-test('test samtools view', function (t) {
-    var file = "/home/fsalavert/projects/examples/HG00096.chrom20.ILLUMINA.bwa.GBR.low_coverage.20120522.bam"
-    var region = "20:32878184-32878370";
-    var command = 'sam/samtools/bin/samtools view ' + file + ' ' + region;
-    console.log(command);
-    exec(command, function (error, stdout, stderr) {
-        t.is(error, null);
-        console.log(stdout);
-        t.end();
-    });
-});
