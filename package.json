@@ -1,6 +1,6 @@
 {
     "name": "bam-server",
-    "description": "",
+    "description": "Bam server. Streamming for bam files.",
     "version": "0.0.1",
     "license": "GPL-3.0",
     "author": "Francisco Salavert Torres <frasator@gmail.com>",
