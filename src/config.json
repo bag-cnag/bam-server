@@ -1,0 +1,22 @@
+{
+	"flow": {
+		"port": 8501,
+		"urlPathPrefix": "",
+		"maxWorkers": 0
+	
+	},
+	
+	
+	"bam": {
+	
+		"folders": ["tests/bam_files_folder_1"]
+	},
+	
+
+	"samtools": {
+		"path": "/var/_shared/samtools_app/samtools/samtools"
+	
+	}
+	
+
+}

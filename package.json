@@ -1,0 +1,18 @@
+{
+    "name": "bam-flow",
+    "description": "Streamming server for bam files. Based on bam-server",
+    "version": "0.0.1",
+    "license": "GPL-3.0",
+    "author": "Felipe Camacho <felipe.camacho@cnag.crg.eu>",
+    "scripts": {
+    	"start": "node src/clusterControl.js"
+    },
+    "dependencies": {
+        "async": "^2.5.0",
+        "body-parser": "^1.17.2",
+        "compression": "^1.7.0",
+        "cors": "^2.8.4",
+        "express": "^4.15.4",
+        "shelljs": "^0.7.8"
+    }
+}
