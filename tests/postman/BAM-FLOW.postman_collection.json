@@ -1,0 +1,85 @@
+{
+	"variables": [],
+	"info": {
+		"name": "BAM-FLOW",
+		"_postman_id": "12a7ae91-aa97-fc4c-ae98-9460249524c5",
+		"description": "BAM FLOW",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Get /region",
+			"request": {
+				"url": {
+					"raw": "http://{{server}}/region?region=chr17:1-240&filename=chr17.1-250.bam",
+					"protocol": "http",
+					"host": [
+						"{{server}}"
+					],
+					"path": [
+						"region"
+					],
+					"query": [
+						{
+							"key": "region",
+							"value": "chr17:1-240",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "filename",
+							"value": "chr17.1-250.bam",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					},
+					{
+						"key": "x-access-token",
+						"value": "{{security_key}}",
+						"description": "Token"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n \"options\": {\n    \"loopTime\": 300,\n    \"engineOptions\": {\n      \"ticks\": 3,\n      \"showTime\": false,\n      \"showDeltaTime\": true\n    }\n  }\n}"
+				},
+				"description": "Get BAM region"
+			},
+			"response": []
+		},
+		{
+			"name": "Get Home",
+			"request": {
+				"url": "http://{{server}}/",
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					},
+					{
+						"key": "x-access-token",
+						"value": "{{security_key}}",
+						"description": "Token"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n \"options\": {\n    \"loopTime\": 300,\n    \"engineOptions\": {\n      \"ticks\": 3,\n      \"showTime\": false,\n      \"showDeltaTime\": true\n    }\n  }\n}"
+				},
+				"description": "Get Home"
+			},
+			"response": []
+		}
+	]
+}
